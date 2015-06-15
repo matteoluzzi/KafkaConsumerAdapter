@@ -1,10 +1,12 @@
 package no.vimond.matteo.KafkaConsumerAdapter.adapters;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import no.vimond.matteo.KafkaConsumerAdapter.interfaces.ConsumerGroup;
 import no.vimond.matteo.KafkaConsumerAdapter.properties.KafkaProperties;
+import no.vimond.matteo.KafkaConsumerAdapter.utils.GlobalConstants;
 
 public class KafkaConsumerHandler {
 
@@ -14,14 +16,21 @@ public class KafkaConsumerHandler {
 	public KafkaConsumerHandler()
 	{
 		this._properties = new KafkaProperties();
+		System.out.println(this._properties);
 		this._consumerGroups  = new HashSet<ConsumerGroup>();
 	}
 	
-	public registerConsumerGroup()
+	public void registerConsumerGroup(Set<String> topics)
 	{
-		KakfaConsumerGroup group = new KakfaConsumerGroup();
+		this._properties.addOrUpdateProperty(GlobalConstants._groupIdKey, "group1");
+		KakfaConsumerGroup group = new KakfaConsumerGroup(_properties, topics);
 		this._consumerGroups.add(group);
-		group.startListening();
+	}
+	
+	public void startListening()
+	{
+		for(ConsumerGroup group : this._consumerGroups)
+			group.start();
 	}
 	
 	

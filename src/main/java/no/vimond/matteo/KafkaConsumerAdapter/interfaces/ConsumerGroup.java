@@ -16,7 +16,5 @@ public interface ConsumerGroup {
 	public void unsubscribe(String topic);
 	
 	public Set<String> getAllSubscribedTopic();
-	
-	public void processMessage(String message);
 
 }
