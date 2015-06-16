@@ -29,6 +29,6 @@ public class KafkaProperties extends Properties {
 	
 	public void addOrUpdateProperty(String key, String value)
 	{
-		this.defaults.put(key, value);
+		this.setProperty(key, value);
 	}
 }

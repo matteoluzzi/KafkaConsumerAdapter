@@ -32,7 +32,7 @@ public class KakfaConsumerGroup implements ConsumerGroup
 	private ExecutorService _executor;
 
 	// hardcoded just for test purposes
-	private final int _numThreads = 2;
+	private final int _numThreads = 1;
 
 	public KakfaConsumerGroup(Properties props, Set<String> topics)
 	{
@@ -149,12 +149,13 @@ public class KakfaConsumerGroup implements ConsumerGroup
 	
 	public synchronized void processMessage(MessageAndMetadata<byte[], byte[]> msgAndMetadata)
 	{
-		LOG.debug(this.toString() + ": received message " + new String(msgAndMetadata.message()));
+		System.out.println(this.toString() + ": received message " + new String(msgAndMetadata.message()));
+		LOG.info(this.toString() + ": received message " + new String(msgAndMetadata.message()));
 	}
 	
 	public String toString()
 	{
-		return "KafkaConsumerGroup" + this._groupId;
+		return "KafkaConsumerGroup - " + this._groupId;
 	}
 
 }

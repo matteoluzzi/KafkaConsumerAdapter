@@ -30,7 +30,7 @@ public class KafkaConsumerHandler {
 		this._properties.addOrUpdateProperty(GlobalConstants._groupIdKey, "group" + this._counter.getAndIncrement());
 		KakfaConsumerGroup group = new KakfaConsumerGroup(_properties, topics);
 		this._consumerGroups.add(group);
-		LOG.debug("KafkaConsumerHandler: added new group to the topics: " + topics);
+		LOG.info("KafkaConsumerHandler: added new group to the topics: " + topics);
 		
 	}
 	
