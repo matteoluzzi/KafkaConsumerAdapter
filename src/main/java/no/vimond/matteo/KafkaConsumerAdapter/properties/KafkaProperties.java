@@ -1,9 +1,11 @@
 package no.vimond.matteo.KafkaConsumerAdapter.properties;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.Map.Entry;
+
+import no.vimond.matteo.KafkaConsumerAdapter.utils.GlobalConstants;
+import no.vimond.matteo.KafkaConsumerAdapter.utils.Utility;
 
 public class KafkaProperties extends Properties {
 
@@ -15,10 +17,7 @@ public class KafkaProperties extends Properties {
 		this.defaults = new Properties();
 		try 
 		{
-			Thread currentThread = Thread.currentThread();
-			ClassLoader contextClassLoader = currentThread.getContextClassLoader();
-			InputStream propertiesStream = contextClassLoader.getResourceAsStream("kafkasettings.properties");
-			this.defaults.load(propertiesStream);
+			this.defaults.load(Utility.loadPropertiesFileFromClassPath(GlobalConstants._propertiesFile));
 			for(Entry<Object, Object> entry : defaults.entrySet())
 				this.setProperty((String) entry.getKey(), (String) entry.getValue());
 			

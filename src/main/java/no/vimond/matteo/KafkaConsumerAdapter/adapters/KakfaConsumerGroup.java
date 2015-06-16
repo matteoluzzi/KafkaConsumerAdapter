@@ -18,8 +18,13 @@ import kafka.message.MessageAndMetadata;
 import no.vimond.matteo.KafkaConsumerAdapter.interfaces.ConsumerGroup;
 import no.vimond.matteo.KafkaConsumerAdapter.utils.GlobalConstants;
 
+import org.apache.log4j.Logger;
+
+
 public class KakfaConsumerGroup implements ConsumerGroup
 {
+	private final Logger LOG = Logger.getLogger(KakfaConsumerGroup.class);
+	
 	private String _groupId;
 	private AtomicBoolean _running;
 	private ConsumerConnector _clusterConnector;
@@ -27,7 +32,7 @@ public class KakfaConsumerGroup implements ConsumerGroup
 	private ExecutorService _executor;
 
 	// hardcoded just for test purposes
-	private final int _numThreads = 3;
+	private final int _numThreads = 2;
 
 	public KakfaConsumerGroup(Properties props, Set<String> topics)
 	{
@@ -102,6 +107,8 @@ public class KakfaConsumerGroup implements ConsumerGroup
 
 	public void start()
 	{
+		LOG.info(this.toString() + ": start listening on topics " + this._topics);
+		
 		Map<String, Integer> topicsCountMap = new HashMap<String, Integer>();
 		for (String topic : this._topics)
 			topicsCountMap.put(topic, 1);
@@ -142,8 +149,12 @@ public class KakfaConsumerGroup implements ConsumerGroup
 	
 	public synchronized void processMessage(MessageAndMetadata<byte[], byte[]> msgAndMetadata)
 	{
-		System.out.println(" Received message: (" +
-				  new String(msgAndMetadata.message()) + ")");
+		LOG.debug(this.toString() + ": received message " + new String(msgAndMetadata.message()));
+	}
+	
+	public String toString()
+	{
+		return "KafkaConsumerGroup" + this._groupId;
 	}
 
 }
