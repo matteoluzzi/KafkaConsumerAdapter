@@ -16,6 +16,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
 import no.vimond.matteo.KafkaConsumerAdapter.interfaces.ConsumerGroup;
+import no.vimond.matteo.KafkaConsumerAdapter.interfaces.MessageProcessor;
 import no.vimond.matteo.KafkaConsumerAdapter.utils.GlobalConstants;
 
 import org.apache.log4j.Logger;
@@ -30,61 +31,24 @@ public class KakfaConsumerGroup implements ConsumerGroup
 	private ConsumerConnector _clusterConnector;
 	private Set<String> _topics;
 	private ExecutorService _executor;
+	private MessageProcessor _processor;
+	//TODO hardcoded just for test purposes
+	private int _totNumberOfPartitions = 2;
+	private int _executorSize = 1;
 
-	// hardcoded just for test purposes
-	private final int _numThreads = 1;
-
-	public KakfaConsumerGroup(Properties props, Set<String> topics)
+	public KakfaConsumerGroup(Properties props, Set<String> topics, MessageProcessor processor)
 	{
 		this._groupId = props.getProperty(GlobalConstants._groupIdKey);
 		this._topics = new HashSet<String>();
 		this._running = new AtomicBoolean(false);
 		this._clusterConnector = Consumer.createJavaConsumerConnector(new ConsumerConfig(props));
 		// TODO substitute it with a more appropriate class which uses a custom thread factory
-		this._executor = Executors.newFixedThreadPool(_numThreads);
+		this._executor = Executors.newFixedThreadPool(_executorSize);
+		this._processor = processor;
 		
 		for(String topic : topics)
 			this.subscribe(topic);
 	}
-
-	// ---------------GETTERS AND SETTERS-----------
-
-	public String get_groupId()
-	{
-		return _groupId;
-	}
-
-	public void set_groupId(String _groupId)
-	{
-		this._groupId = _groupId;
-	}
-
-	public ConsumerConnector get_clusterConnector()
-	{
-		return _clusterConnector;
-	}
-
-	public void set_clusterConnector(ConsumerConnector _clusterConnector)
-	{
-		this._clusterConnector = _clusterConnector;
-	}
-
-	public Set<String> get_topics()
-	{
-		return _topics;
-	}
-
-	public void set_topics(Set<String> _topics)
-	{
-		this._topics = _topics;
-	}
-
-	public int get_numThreads()
-	{
-		return _numThreads;
-	}
-
-	// ---------------INHERITED METHODS-------------
 
 	public void subscribe(String topic)
 	{
@@ -110,27 +74,19 @@ public class KakfaConsumerGroup implements ConsumerGroup
 		LOG.info(this.toString() + ": start listening on topics " + this._topics);
 		
 		Map<String, Integer> topicsCountMap = new HashMap<String, Integer>();
+		//two stream for a topic --> each topic has two partition
 		for (String topic : this._topics)
 			topicsCountMap.put(topic, 1);
 
 		// map of topic, list of kafkastream
-		Map<String, List<KafkaStream<byte[], byte[]>>> topicMessageStreams = this._clusterConnector
-				.createMessageStreams(topicsCountMap);
+		Map<String, List<KafkaStream<byte[], byte[]>>> topicMessageStreams = this._clusterConnector.createMessageStreams(topicsCountMap);
 
 		for (final List<KafkaStream<byte[], byte[]>> topicStreams : topicMessageStreams.values())
 		{
 			for (final KafkaStream<byte[], byte[]> stream : topicStreams)
 			{
-				this._executor.submit(new Runnable()
-				{
-					public void run()
-					{
-						for (MessageAndMetadata<byte[], byte[]> msgAndMetadata : stream)
-						{
-							processMessage(msgAndMetadata);
-						}
-					}
-				});
+				this._processor.setStream(stream);
+				this._executor.submit(this._processor);
 			}
 		}
 		this._running.set(true);

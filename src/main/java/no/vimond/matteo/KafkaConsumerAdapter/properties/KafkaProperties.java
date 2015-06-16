@@ -19,7 +19,7 @@ public class KafkaProperties extends Properties {
 		{
 			this.defaults.load(Utility.loadPropertiesFileFromClassPath(GlobalConstants._propertiesFile));
 			for(Entry<Object, Object> entry : defaults.entrySet())
-				this.setProperty((String) entry.getKey(), (String) entry.getValue());
+				this.addOrUpdateProperty((String) entry.getKey(), (String) entry.getValue());
 			
 		}catch (IOException e) 
 		{
