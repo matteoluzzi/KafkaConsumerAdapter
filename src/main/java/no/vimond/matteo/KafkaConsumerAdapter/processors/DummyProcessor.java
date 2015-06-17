@@ -3,9 +3,9 @@ package no.vimond.matteo.KafkaConsumerAdapter.processors;
 import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
 import no.vimond.matteo.KafkaConsumerAdapter.interfaces.MessageProcessor;
+import no.vimond.matteo.KafkaConsumerAdapter.utils.MessageProcessorType;
 
 import org.apache.log4j.Logger;
-
 
 public class DummyProcessor implements MessageProcessor
 {
@@ -17,6 +17,11 @@ public class DummyProcessor implements MessageProcessor
 	{
 		this._consumerGroup = group;
 		this._stream = null;
+	}
+	
+	public DummyProcessor createMessageProcessor(String group)
+	{
+		return new DummyProcessor(group);
 	}
 
 	
@@ -32,17 +37,23 @@ public class DummyProcessor implements MessageProcessor
 	
 	public void run()
 	{	
-		for (MessageAndMetadata<byte[], byte[]> msgAndMetadata : this._stream)
+		if(this._stream != null)
 		{
-			try
+			for (MessageAndMetadata<byte[], byte[]> msgAndMetadata : this._stream)
 			{
-				process(msgAndMetadata);
+				try
+				{
+					process(msgAndMetadata);
+				}
+				catch(IllegalArgumentException e)
+				{
+					return;
+				}
 			}
-			catch(IllegalArgumentException e)
-			{
-				return;
-			}
-			
+		}
+		else
+		{
+			throw new RuntimeException();
 		}
 	}
 

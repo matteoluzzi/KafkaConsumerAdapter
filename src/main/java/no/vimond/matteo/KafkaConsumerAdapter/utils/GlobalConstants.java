@@ -7,6 +7,7 @@ public class GlobalConstants {
 	public static final String _groupIdKey = "group.id";
 	public static final String _numOfConsumerGroup = "numOfConsumerGroups";
 	public static final String _numOfExecutorsPerGroup = "numOfExecutorsPerGroup";
+	public static final String _topics = "topics";
 	
 	
 }

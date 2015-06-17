@@ -5,9 +5,10 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import no.vimond.matteo.KafkaConsumerAdapter.interfaces.ConsumerGroup;
-import no.vimond.matteo.KafkaConsumerAdapter.processors.DummyProcessor;
+import no.vimond.matteo.KafkaConsumerAdapter.processors.MessageProcessorFactory;
 import no.vimond.matteo.KafkaConsumerAdapter.properties.KafkaProperties;
 import no.vimond.matteo.KafkaConsumerAdapter.utils.GlobalConstants;
+import no.vimond.matteo.KafkaConsumerAdapter.utils.MessageProcessorType;
 
 import org.apache.log4j.Logger;
 
@@ -40,8 +41,8 @@ public class KafkaConsumerHandler {
 		
 		groupName = this._properties.getProperty(GlobalConstants._groupIdKey);
 		
-		//TODO replace the processor argument with a factory method
-		KakfaConsumerGroup group = new KakfaConsumerGroup(_properties, topics, new DummyProcessor(groupName));
+		
+		KakfaConsumerGroup group = new KakfaConsumerGroup(_properties, topics, MessageProcessorFactory.getFactory().createMessageProcessor(MessageProcessorType.DUMMY, groupName));
 		this._consumerGroups.add(group);
 		LOG.info("KafkaConsumerHandler: added new group " + groupName + "to the topics: " + topics);	
 	}
