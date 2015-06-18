@@ -22,9 +22,9 @@ import no.vimond.matteo.KafkaConsumerAdapter.utils.GlobalConstants;
 import org.apache.log4j.Logger;
 
 
-public class KakfaConsumerGroup implements ConsumerGroup
+public class KafkaConsumerGroup implements ConsumerGroup
 {
-	private final Logger LOG = Logger.getLogger(KakfaConsumerGroup.class);
+	private final Logger LOG = Logger.getLogger(KafkaConsumerGroup.class);
 	
 	private String _groupId;
 	private AtomicBoolean _running;
@@ -36,7 +36,7 @@ public class KakfaConsumerGroup implements ConsumerGroup
 	private int _totNumberOfPartitions = 2;
 	private int _executorSize = 1;
 
-	public KakfaConsumerGroup(Properties props, Set<String> topics, MessageProcessor processor)
+	public KafkaConsumerGroup(Properties props, Set<String> topics, MessageProcessor processor)
 	{
 		this._groupId = props.getProperty(GlobalConstants._groupIdKey);
 		this._topics = new HashSet<String>();

@@ -3,7 +3,6 @@ package no.vimond.matteo.KafkaConsumerAdapter.processors;
 import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
 import no.vimond.matteo.KafkaConsumerAdapter.interfaces.MessageProcessor;
-import no.vimond.matteo.KafkaConsumerAdapter.utils.MessageProcessorType;
 
 import org.apache.log4j.Logger;
 

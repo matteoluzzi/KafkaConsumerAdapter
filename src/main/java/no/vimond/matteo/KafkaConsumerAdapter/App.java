@@ -10,6 +10,7 @@ import java.util.Set;
 import no.vimond.matteo.KafkaConsumerAdapter.adapters.KafkaConsumerHandler;
 import no.vimond.matteo.KafkaConsumerAdapter.processors.DummyProcessor;
 import no.vimond.matteo.KafkaConsumerAdapter.processors.MessageProcessorFactory;
+import no.vimond.matteo.KafkaConsumerAdapter.storm.StormStarter;
 import no.vimond.matteo.KafkaConsumerAdapter.utils.GlobalConstants;
 import no.vimond.matteo.KafkaConsumerAdapter.utils.MessageProcessorType;
 import no.vimond.matteo.KafkaConsumerAdapter.utils.Utility;
@@ -18,7 +19,7 @@ public class App
 {	
     public static void main( String[] args )
     {
-    	//register processors used by factory method
+   /* 	//register processors used by factory method
     	registerProcessor();
     	
     	//load system properties
@@ -39,6 +40,9 @@ public class App
     	}
    
     	handler.startListening();
+    	*/
+    	StormStarter stormStarter  = new StormStarter();
+    	stormStarter.startTopology();
     	
     }
     

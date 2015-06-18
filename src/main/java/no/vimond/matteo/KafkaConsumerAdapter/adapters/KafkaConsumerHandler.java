@@ -42,7 +42,7 @@ public class KafkaConsumerHandler {
 		groupName = this._properties.getProperty(GlobalConstants._groupIdKey);
 		
 		
-		KakfaConsumerGroup group = new KakfaConsumerGroup(_properties, topics, MessageProcessorFactory.getFactory().createMessageProcessor(MessageProcessorType.DUMMY, groupName));
+		KafkaConsumerGroup group = new KafkaConsumerGroup(_properties, topics, MessageProcessorFactory.getFactory().createMessageProcessor(MessageProcessorType.DUMMY, groupName));
 		this._consumerGroups.add(group);
 		LOG.info("KafkaConsumerHandler: added new group " + groupName + "to the topics: " + topics);	
 	}
