@@ -38,6 +38,7 @@ public class BasicBolt extends BaseRichBolt
 			this.collector.emit(outputTuple);
 			printLog(outputTuple.toString());
 		}
+		collector.ack(input);
 		
 	}
 

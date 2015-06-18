@@ -25,18 +25,18 @@ public class StormStarter
 		
 	
 		KafkaSpout kafkaSpout = new KafkaSpout(conf);
-		KafkaSpout kafkaSpout1 = new KafkaSpout(conf);
+		//KafkaSpout kafkaSpout1 = new KafkaSpout(conf);
 
 		TopologyBuilder builder = new TopologyBuilder();
 
-		builder.setSpout("kafka-spout", kafkaSpout);
+		builder.setSpout("kafka-spout", kafkaSpout,2);
 		builder.setBolt("kafka-bolt", new BasicBolt(), 2).shuffleGrouping("kafka-spout");
 		
 		Config topConfig = new Config();
 		topConfig.setDebug(true);
 		topConfig.setNumWorkers(2);
 
-		LocalCluster cluster = new LocalCluster();
+		LocalCluster cluster = new LocalCluster("localhost", new Long(2181));
 		cluster.submitTopology("HelloStorm", topConfig , builder.createTopology());
 	}
 }
